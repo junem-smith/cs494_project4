@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 // data structure
 type ProfileProps = {
     profile: Profile | undefined,
-    updateProfile: (profile: Profile, avatar: File | undefined) => void
+    updateProfile: (profile: Profile, images: File[]) => Promise<void>
     signOut: () => void
 }
 
@@ -16,16 +16,20 @@ type ProfileProps = {
 const ProfileContext = createContext<ProfileProps | undefined>(undefined)
 
 // provider
-export function ProfileProvider(props: {profile: Profile | undefined, children: React.ReactNode }) {
+export function ProfileProvider(props: {
+    profile: Profile | undefined, children: React.ReactNode 
+}) {
     const router = useRouter()
 
-    async function updateProfile(profile: Profile, avatar: File | undefined){
+    async function updateProfile(profile: Profile, images: File[]) {
 
-        let avatarUrl: string | null = null
-        if (avatar){
+        let imageUrls: string[] | null = null
+
+        if (images && images.length > 0){
             const formData = new FormData()
             formData.append("id", profile.id)
-            formData.append("Image", avatar)
+
+            images.forEach(img => formData.append("images", img))
             const res = await fetch("/api/avatar",
                 {
                     method: "POST",
@@ -34,14 +38,14 @@ export function ProfileProvider(props: {profile: Profile | undefined, children: 
             )
 
             const data = await res.json()
-            avatarUrl = data.avatarUrl
+            imageUrls = data.imageUrls
         }
 
-        if (avatarUrl){
-            profile.avatar_url = avatarUrl
+        if (imageUrls){
+            profile.image_urls = imageUrls
         }
         
-        const res = await fetch("/api/profile", {
+        await fetch("/api/profile", {
             method: "PUT",
             body: JSON.stringify({profile: profile})
         })
