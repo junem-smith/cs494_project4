@@ -30,7 +30,7 @@ export function ProfileProvider(props: {
             formData.append("id", profile.id)
 
             images.forEach(img => formData.append("images", img))
-            const res = await fetch("/api/avatar",
+            const res = await fetch("/api/image",
                 {
                     method: "POST",
                     body: formData
