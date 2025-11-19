@@ -33,20 +33,25 @@ export default function LoginPage() {
                   type="password"
                   required
                 />
-             </Stack>
-            <br/>
-            <Button type="submit" variant="contained" fullWidth>
-              Log in
-            </Button>
-          
-            <Button
-              variant="outlined"
-              type="submit"
-              fullWidth
-              sx={{ marginTop: 2 }}
-            >
-              Sign up
-            </Button>
+             
+              <Stack direction="row" spacing={2}>
+                <Button variant="contained"
+                      type="submit"
+                      fullWidth
+                      formAction={login}>
+                  Log in
+                </Button>
+              
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  fullWidth
+                  sx={{ marginTop: 2 }}
+                >
+                  Sign up
+                </Button>
+              </Stack>
+            </Stack>
           </form>
         </CardContent>
       </Card>
