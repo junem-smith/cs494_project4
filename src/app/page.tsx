@@ -2,7 +2,8 @@
 
 import { useProfile } from "@/contexts/profileContext";
 import { Button, Box, ToggleButton, Typography } from "@mui/material";
-import ProfileGallery from "./profile/page";
+import ImageGallery from "@/components/ImageGallery";
+
 
 export default function Home() {
 
@@ -17,7 +18,7 @@ export default function Home() {
         </Typography>
         <br/>
         <Button variant="contained" onClick={() => signOut }>Sign Out</Button>
-        <ProfileGallery />
+        <ImageGallery />
       </Box>
   );
 }

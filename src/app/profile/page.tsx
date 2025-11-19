@@ -1,111 +1,111 @@
-'use client'
+// 'use client'
 
-import { useProfile } from "@/contexts/profileContext"
-import { Box, Button, TextField, ImageList, ImageListItem } from "@mui/material"
-import { useState, useEffect } from "react"
-import Image from "next/image"
+// import { useProfile } from "@/contexts/profileContext"
+// import { Box, Button, TextField, ImageList, ImageListItem } from "@mui/material"
+// import { useState, useEffect } from "react"
+// import Image from "next/image"
 
-import imageCompression from "browser-image-compression"
+// import imageCompression from "browser-image-compression"
 
-export default function ProfileGallery(){
-    const { profile, updateProfile } = useProfile()
-
-
-    const [fullName, setFullName] = useState<string>(profile ? profile.full_name ?? "" : "")
-    const [ website, setWebsite ] = useState<string>(profile ? profile.website ?? "" : "")
-    // const [ image, setImage ] = useState<File | undefined>(undefined);
-    const [images, setImages] = useState<File[]>([]);
-    const [ imageUrls, setImageUrls ] = useState<string[]>(profile?.image_urls ?? [] )
-
-    async function handleImages(e: React.ChangeEvent<HTMLInputElement>){
-        if (!e.target.files) return
-        const files = Array.from(e.target.files)
-        const options = {
-            maxWidthOrHeight: 256,
-            fileType: 'image/webp'
-        }
-
-        const newImages: File[] = []
-        const newUrls: string[] = []
-        for (const file of files) {
-            try {
-                const compressed = await imageCompression(file, options)
-                newImages.push(compressed)
-                newUrls.push(URL.createObjectURL(compressed))
-            } catch (err){
-                console.log(err)
-            }
-        }
-        setImages(prev => [...prev, ...newImages])
-        setImageUrls(prev => [...prev, ...newUrls])
-
-    }
+// export default function Home(){
+//     const { profile, updateProfile } = useProfile()
 
 
-    function handleSave(){
-        if (profile){
-            profile.full_name = fullName
-            profile.website = website  
-            updateProfile(profile, images)
-        }
-    }
+//     const [fullName, setFullName] = useState<string>(profile ? profile.full_name ?? "" : "")
+//     const [ website, setWebsite ] = useState<string>(profile ? profile.website ?? "" : "")
+//     // const [ image, setImage ] = useState<File | undefined>(undefined);
+//     const [images, setImages] = useState<File[]>([]);
+//     const [ imageUrls, setImageUrls ] = useState<string[]>(profile?.image_urls ?? [] )
 
-    // useEffect(()=>{
-    //     profile.full_name = fullName
-    //     profile.website = website
-    //     updateProfile(profile, avatar)
-    // },[website, fullName])
+//     async function handleImages(e: React.ChangeEvent<HTMLInputElement>){
+//         if (!e.target.files) return
+//         const files = Array.from(e.target.files)
+//         const options = {
+//             maxWidthOrHeight: 256,
+//             fileType: 'image/webp'
+//         }
 
-    // useEffect(()=>{
-    //     if (images){
-    //         const previewUrl = URL.createObjectURL(images)
-    //         console.log(images)
-    //         setImageUrls([...imageUrls, previewUrl])
+//         const newImages: File[] = []
+//         const newUrls: string[] = []
+//         for (const file of files) {
+//             try {
+//                 const compressed = await imageCompression(file, options)
+//                 newImages.push(compressed)
+//                 newUrls.push(URL.createObjectURL(compressed))
+//             } catch (err){
+//                 console.log(err)
+//             }
+//         }
+//         setImages(prev => [...prev, ...newImages])
+//         setImageUrls(prev => [...prev, ...newUrls])
+
+//     }
+
+
+//     function handleSave(){
+//         if (profile){
+//             profile.full_name = fullName
+//             profile.website = website  
+//             updateProfile(profile, images)
+//         }
+//     }
+
+//     // useEffect(()=>{
+//     //     profile.full_name = fullName
+//     //     profile.website = website
+//     //     updateProfile(profile, avatar)
+//     // },[website, fullName])
+
+//     // useEffect(()=>{
+//     //     if (images){
+//     //         const previewUrl = URL.createObjectURL(images)
+//     //         console.log(images)
+//     //         setImageUrls([...imageUrls, previewUrl])
         
-    //         return () => URL.revokeObjectURL(previewUrl)
-    //     }
+//     //         return () => URL.revokeObjectURL(previewUrl)
+//     //     }
         
-    // },[images])
+//     // },[images])
 
-    if (!profile) return <></>
+//     if (!profile) return <></>
 
-    return (
-        <Box sx={{ display: "grid", gap: 2, maxWidth: 300}}>
+//     return (
+//         <Box sx={{ display: "grid", gap: 2, maxWidth: 300}}>
 
-            <TextField
-                id="Upload Images"
-                value={"Upload Images"}
-                label={"Upload Images"}
-                slotProps={{
-                    input: {readOnly: true}
-                }}
-            />
+//             <TextField
+//                 id="Upload Images"
+//                 value={"Upload Images"}
+//                 label={"Upload Images"}
+//                 slotProps={{
+//                     input: {readOnly: true}
+//                 }}
+//             />
 
-            <Button variant="contained" component="label">
-                Choose Images
-                <input type="file" hidden multiple accept="image/*" onChange={handleImages} />
-            </Button>
+//             <Button variant="contained" component="label">
+//                 Choose Images
+//                 <input type="file" hidden multiple accept="image/*" onChange={handleImages} />
+//             </Button>
 
-            <Button onClick={handleSave} variant="contained">
-                Upload Images
-            </Button>
+//             <Button onClick={handleSave} variant="contained">
+//                 Upload Images
+//             </Button>
 
-            <ImageList sx={{ width: 500, height: 450 }} variant="woven" cols={3} gap={8}>
-                {imageUrls.map((item) => (
-                    <ImageListItem key={item}>
-                        <Image
-                        src={item}
-                        width={500}
-                        height={500}
-                        alt={item}
-                        loading={"lazy"}
-                        />
+//             <ImageList sx={{ width: 500, height: 450 }} variant="woven" cols={3} gap={8}>
+//                 {imageUrls.map((item) => (
+//                     <ImageListItem key={item}>
+//                         <Image
+//                         src={item}
+//                         width={500}
+//                         height={500}
+//                         alt={item}
+//                         loading={"lazy"}
+//                         />
                         
-                    </ImageListItem>
-                ))}
-                </ImageList>
+//                     </ImageListItem>
+//                 ))}
+//                 </ImageList>
 
-        </Box>
-    )
+//         </Box>
+//     )
 
-}
+// }
