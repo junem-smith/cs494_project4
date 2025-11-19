@@ -17,7 +17,7 @@ export default function LoginPage() {
           <Typography variant="h5" align="center"> Welcome </Typography>
           
 
-          <form action={login}>
+          <form>
              <Stack spacing={2}>
                 <TextField
                   fullWidth
@@ -47,6 +47,7 @@ export default function LoginPage() {
                   type="submit"
                   fullWidth
                   sx={{ marginTop: 2 }}
+                  formAction={signup}
                 >
                   Sign up
                 </Button>
