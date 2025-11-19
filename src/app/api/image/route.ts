@@ -14,31 +14,42 @@ export async function POST(request: Request){
         return Response.json({message: "Must be logged in"})
     }
 
-    // Needs to return an array of images?
+    
     const formData = await request.formData()
-    const images = formData.get('images') as Blob
+
+    // Get images array
+    const images = formData.getAll('images') as Blob[]
     const id = formData.get("id")
 
     if (id !== user.data.user.id){
         return Response.json({message: "Invalid user ID"})
     }
     
-    
     const userFolder = `${user.data.user.id}/`
 
+    // Delete preexisting files
     const existingFiles = await list({ prefix: userFolder })
+    for (const file of existingFiles.blobs){
+        await del(file.pathname)
+    }
 
     console.log(existingFiles)
 
-    for (let i = 0; i < existingFiles.blobs.length; i++){
-        del(existingFiles.blobs[i].pathname)
+
+    // Upload images
+    const uploadedUrls: string[] = [];
+
+    for (let i = 0; i < images.length; i++){
+        const filename = `${userFolder}/image_${Date.now()}_${i}.webp`;
+        const { url } = await put(filename, images[i], {
+            access: "public",
+            allowOverwrite: true
+        });
+
+        uploadedUrls.push(url);
     }
 
-
-    const filename = `${userFolder}/avatar.${Date.now()}.webp`
     
-    const {url} = await put(filename, images, {access: `public`, allowOverwrite: true})
-    
-    return Response.json({avatarUrl: url})
+    return Response.json({ imageUrls: uploadedUrls })
 
 }

@@ -2,7 +2,7 @@
 
 import { useProfile } from "@/contexts/profileContext";
 import { Button, Box, ToggleButton } from "@mui/material";
-import Image from "next/image";
+
 
 export default function Home() {
 
@@ -13,7 +13,8 @@ export default function Home() {
         {
           profile ? `Hello, ${profile.full_name}` : `Hello World`
         }
-        <Button variant="contained" onClick={() => { signOut }}>Sign Out</Button>
+
+        <Button variant="contained" onClick={() => signOut }>Sign Out</Button>
         
       </Box>
   );

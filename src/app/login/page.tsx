@@ -1,8 +1,8 @@
 'use client'
 
 import { login, signup } from './actions'
-import { Box, Grid, Button, TextField, Typography, ListItem } from '@mui/material'
-
+import { Box, Grid, Button, Typography } from '@mui/material'
+// TextField, ListItem
 export default function LoginPage() {
   return (
     <Box  display="flex"
@@ -10,7 +10,9 @@ export default function LoginPage() {
           alignItems="center"
           minHeight="100vh" 
     >
-      <Grid sx={{ display: 'inline-grid' }}>
+      
+      <Grid display='inline-grid' >
+        <Typography align="center">Welcome</Typography>
         <label htmlFor="email">Email:</label>
         <input id="email" name="email" type="email" required />
         <br/>
@@ -18,13 +20,15 @@ export default function LoginPage() {
         <input id="password" name="password" type="password" required />
         
         <br/>
-        <Button variant="contained" onClick={() => { login }}>
+        <Box alignItems="center">
+          <Button variant="contained" size="small" onClick={() => { login }}>
           Log in
         </Button>
-        <br/>
-        <Button variant="contained" onClick={() => { signup }}>
+        <Button variant="contained" size="small" onClick={() => { signup }}>
           Sign up
         </Button>
+        </Box>
+        
       </Grid>
     </Box>
   )
