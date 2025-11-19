@@ -10,25 +10,35 @@ export default function LoginPage() {
           alignItems="center"
           minHeight="100vh" 
     >
-      
-      <Grid display='inline-grid' >
+      <Grid display="inline-grid">
         <Typography align="center">Welcome</Typography>
-        <label htmlFor="email">Email:</label>
-        <input id="email" name="email" type="email" required />
-        <br/>
-        <label htmlFor="password">Password:</label>
-        <input id="password" name="password" type="password" required />
-        
-        <br/>
-        <Box alignItems="center">
-          <Button variant="contained" size="small" onClick={() => { login }}>
+
+        <form action={login}>
+          <label htmlFor="email">Email:</label>
+          <input id="email" name="email" type="email" required />
+
+          <br />
+
+          <label htmlFor="password">Password:</label>
+          <input id="password" name="password" type="password" required />
+
+          <br />
+
+          <Box alignItems="center">
+          <Button type="submit" variant="contained" size="small">
           Log in
-        </Button>
-        <Button variant="contained" size="small" onClick={() => { signup }}>
-          Sign up
-        </Button>
-        </Box>
-        
+          </Button>
+          </Box>
+        </form>
+
+        <form action={signup}>
+          <Box mt={2} alignItems="center">
+            <Button type="submit" variant="contained" size="small">
+              Sign up
+            </Button>
+          </Box>
+        </form>
+
       </Grid>
     </Box>
   )
