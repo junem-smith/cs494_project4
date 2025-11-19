@@ -1,8 +1,8 @@
 'use client'
 
 import { useProfile } from "@/contexts/profileContext";
-import { Button, Box, ToggleButton } from "@mui/material";
-
+import { Button, Box, ToggleButton, Typography } from "@mui/material";
+import ProfileGallery from "./profile/page";
 
 export default function Home() {
 
@@ -10,12 +10,14 @@ export default function Home() {
 
   return (
       <Box>
-        {
+        <Typography>
+          {
           profile ? `Hello, ${profile.full_name}` : `Hello World`
         }
-
+        </Typography>
+        <br/>
         <Button variant="contained" onClick={() => signOut }>Sign Out</Button>
-        
+        <ProfileGallery />
       </Box>
   );
 }

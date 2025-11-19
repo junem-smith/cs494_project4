@@ -7,7 +7,7 @@ import Image from "next/image"
 
 import imageCompression from "browser-image-compression"
 
-export default function Home(){
+export default function ProfileGallery(){
     const { profile, updateProfile } = useProfile()
 
 
