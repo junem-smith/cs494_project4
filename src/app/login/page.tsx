@@ -38,9 +38,7 @@ export default function LoginPage() {
             <Button type="submit" variant="contained" fullWidth>
               Log in
             </Button>
-          </form>
           
-          <form action={signup}>
             <Button
               variant="outlined"
               type="submit"
