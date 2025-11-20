@@ -7,9 +7,9 @@ import Image from "next/image"
 
 import imageCompression from "browser-image-compression"
 
-export default function ImageGallery(){
+export default function Home(){
     const { profile, updateProfile } = useProfile()
-    
+
 
     const [fullName, setFullName] = useState<string>(profile ? profile.full_name ?? "" : "")
     const [ website, setWebsite ] = useState<string>(profile ? profile.website ?? "" : "")
