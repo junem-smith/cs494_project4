@@ -15,17 +15,6 @@ export default function Home(){
     const [ website, setWebsite ] = useState<string>(profile ? profile.website ?? "" : "")
     const [images, setImages] = useState<File[]>([]);
     const [ imageUrls, setImageUrls ] = useState<string[]>(profile?.image_urls ?? [] )
-    // track locally-created object URLs so we can revoke them
-    const [ localBlobUrls, setLocalBlobUrls ] = useState<string[]>([])
-
-    // sync form state when profile loads/changes
-    useEffect(() => {
-        if (profile) {
-            setFullName(profile.full_name ?? "")
-            setWebsite(profile.website ?? "")
-            setImageUrls(profile.image_urls ?? [])
-        }
-    }, [profile])
 
     async function handleImages(e: React.ChangeEvent<HTMLInputElement>){
         if (!e.target.files) return
@@ -37,21 +26,17 @@ export default function Home(){
 
         const newImages: File[] = []
         const newUrls: string[] = []
-        const newLocalUrls: string[] = []
         for (const file of files) {
             try {
                 const compressed = await imageCompression(file, options)
                 newImages.push(compressed)
-                const objUrl = URL.createObjectURL(compressed)
-                newUrls.push(objUrl)
-                newLocalUrls.push(objUrl)
+                newUrls.push(URL.createObjectURL(compressed))
             } catch (err){
                 console.log(err)
             }
         }
         setImages(prev => [...prev, ...newImages])
         setImageUrls(prev => [...prev, ...newUrls])
-        setLocalBlobUrls(prev => [...prev, ...newLocalUrls])
 
     }
 
@@ -61,24 +46,8 @@ export default function Home(){
             profile.full_name = fullName
             profile.website = website  
             updateProfile(profile, images)
-                .then(() => {
-                    // clear local blobs after successful upload
-                    localBlobUrls.forEach(url => URL.revokeObjectURL(url))
-                    setLocalBlobUrls([])
-                    setImages([])
-                })
-                .catch(err => console.error('Update failed', err))
         }
     }
-
-    // revoke any local object URLs when component unmounts
-    useEffect(() => {
-        return () => {
-            localBlobUrls.forEach(url => {
-                try { URL.revokeObjectURL(url) } catch {}
-            })
-        }
-    }, [localBlobUrls])
 
     
     if (!profile) return <></>
