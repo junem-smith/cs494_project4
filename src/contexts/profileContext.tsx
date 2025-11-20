@@ -1,74 +1,78 @@
 "use client"
 
-import { createContext, useContext } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 import { Profile } from "@/types/profile"
-
 import { useRouter } from "next/navigation"
 
-// data structure
 type ProfileProps = {
-    profile: Profile | undefined,
-    updateProfile: (profile: Profile, images: File[]) => Promise<void>
-    signOut: () => void
+  profile: Profile | undefined
+  updateProfile: (profile: Profile, images: File[]) => Promise<void>
+  signOut: () => void
 }
 
-// create context
 const ProfileContext = createContext<ProfileProps | undefined>(undefined)
 
-// provider
-export function ProfileProvider(props: {
-    profile: Profile | undefined, children: React.ReactNode 
-}) {
-    const router = useRouter()
+export function ProfileProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const [profile, setProfile] = useState<Profile | undefined>(undefined)
 
-    async function updateProfile(profile: Profile, images: File[]) {
+  // 🔥 Load user on first mount (client-only)
+  useEffect(() => {
+    ;(async () => {
+      const res = await fetch("/api/profile")
+      if (!res.ok) {
+        setProfile(undefined)
+        return
+      }
+      const { profile } = await res.json()
+      setProfile(profile)
+    })()
+  }, [])
 
-        let imageUrls: string[] | null = null
+  async function updateProfile(updated: Profile, images: File[]) {
+    let imageUrls: string[] | null = null
 
-        if (images && images.length > 0){
-            const formData = new FormData()
-            formData.append("id", profile.id)
+    if (images.length > 0) {
+      const formData = new FormData()
+      formData.append("id", updated.id)
+      images.forEach((img) => formData.append("images", img))
 
-            images.forEach(img => formData.append("images", img))
-            const res = await fetch("/api/image",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            )
-
-            const data = await res.json()
-            imageUrls = data.imageUrls
-        }
-
-        if (imageUrls){
-            profile.image_urls = imageUrls
-        }
-        
-        await fetch("/api/profile", {
-            method: "PUT",
-            body: JSON.stringify({profile: profile})
-        })
-        
+      const res = await fetch("/api/image", {
+        method: "POST",
+        body: formData,
+      })
+      const data = await res.json()
+      imageUrls = data.imageUrls
     }
 
-    async function signOut(){
-        await fetch("/api/auth/signout")
-        router.push("/login")
-    }
+    const newProfile = { ...updated }
+    if (imageUrls) newProfile.image_urls = imageUrls
 
-    return (
-        <ProfileContext.Provider value={{ profile: props.profile, updateProfile, signOut }}>
-            {props.children}
-        </ProfileContext.Provider>
-    )
+    await fetch("/api/profile", {
+      method: "PUT",
+      body: JSON.stringify({ profile: newProfile }),
+    })
+
+    // 🔥 update local state so UI re-renders!
+    setProfile(newProfile)
+  }
+
+  async function signOut() {
+    await fetch("/api/auth/signout")
+    setProfile(undefined)
+    router.push("/login")
+  }
+
+  return (
+    <ProfileContext.Provider value={{ profile, updateProfile, signOut }}>
+      {children}
+    </ProfileContext.Provider>
+  )
 }
 
-// use
-export function useProfile(){
-    const context = useContext(ProfileContext)
-    if (!context){
-        throw new Error("useProfile must be used within ProfileProvider")
-    }
-    return context
+export function useProfile() {
+  const context = useContext(ProfileContext)
+  if (!context)
+    throw new Error("useProfile must be used within ProfileProvider")
+  return context
 }

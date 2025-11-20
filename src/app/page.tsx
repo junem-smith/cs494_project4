@@ -13,7 +13,6 @@ export default function Home(){
 
     const [fullName, setFullName] = useState<string>(profile ? profile.full_name ?? "" : "")
     const [ website, setWebsite ] = useState<string>(profile ? profile.website ?? "" : "")
-    // const [ image, setImage ] = useState<File | undefined>(undefined);
     const [images, setImages] = useState<File[]>([]);
     const [ imageUrls, setImageUrls ] = useState<string[]>(profile?.image_urls ?? [] )
 
@@ -50,22 +49,7 @@ export default function Home(){
         }
     }
 
-    // useEffect(()=>{
-    //     profile.full_name = fullName
-    //     profile.website = website
-    //     updateProfile(profile, avatar)
-    // },[website, fullName])
-
-    // useEffect(()=>{
-    //     if (images){
-    //         const previewUrl = URL.createObjectURL(images)
-    //         console.log(images)
-    //         setImageUrls([...imageUrls, previewUrl])
-        
-    //         return () => URL.revokeObjectURL(previewUrl)
-    //     }
-        
-    // },[images])
+    
     if (!profile) return <></>
 
     return (
@@ -101,13 +85,7 @@ export default function Home(){
             <ImageList sx={{ width: 500, height: 450 }} variant="woven" cols={3} gap={8}>
                 {imageUrls.map((item) => (
                     <ImageListItem key={item}>
-                        <Image
-                        src={item}
-                        width={500}
-                        height={500}
-                        alt={item}
-                        loading={"lazy"}
-                        />
+                        <Image src={item} width={500} height={500} alt="" unoptimized />
                         
                     </ImageListItem>
                 ))}
