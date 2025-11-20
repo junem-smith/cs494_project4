@@ -1,14 +1,14 @@
 'use client'
 
 import { useProfile } from "@/contexts/profileContext"
-import { Box, Button, TextField, ImageList, ImageListItem } from "@mui/material"
+import { Box, Button, TextField, ImageList, ImageListItem, Typography } from "@mui/material"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
 import imageCompression from "browser-image-compression"
 
 export default function Home(){
-    const { profile, updateProfile } = useProfile()
+    const { profile, updateProfile, signOut } = useProfile()
 
 
     const [fullName, setFullName] = useState<string>(profile ? profile.full_name ?? "" : "")
@@ -66,11 +66,19 @@ export default function Home(){
     //     }
         
     // },[images])
-
     if (!profile) return <></>
 
     return (
         <Box sx={{ display: "grid", gap: 2, maxWidth: 300}}>
+            <Box>
+                <Typography>
+                    {
+                    profile ? `Hello, ${profile.full_name}` : `Hello World`
+                    }
+                </Typography>
+                <br/>
+                <Button variant="contained" onClick={signOut}>Sign Out</Button> 
+            </Box>
 
             <TextField
                 id="Upload Images"
