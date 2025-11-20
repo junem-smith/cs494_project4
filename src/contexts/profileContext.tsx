@@ -25,30 +25,44 @@ export function ProfileProvider(props: {
 
         let imageUrls: string[] | null = null
 
-        if (images && images.length > 0){
-            const formData = new FormData()
-            formData.append("id", profile.id)
+        try {
+            if (images && images.length > 0){
+                const formData = new FormData()
+                formData.append("id", profile.id)
 
-            images.forEach(img => formData.append("images", img))
-            const res = await fetch("/api/image",
-                {
+                images.forEach(img => formData.append("images", img))
+                const res = await fetch("/api/image", {
                     method: "POST",
                     body: formData
+                })
+
+                if (!res.ok) {
+                    const text = await res.text()
+                    throw new Error(`Image upload failed: ${text}`)
                 }
-            )
 
-            const data = await res.json()
-            imageUrls = data.imageUrls
-        }
+                const data = await res.json()
+                imageUrls = data.imageUrls
+            }
 
-        if (imageUrls){
-            profile.image_urls = imageUrls
+            if (imageUrls){
+                profile.image_urls = imageUrls
+            }
+            
+            const profileRes = await fetch("/api/profile", {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({profile: profile})
+            })
+
+            if (!profileRes.ok){
+                const text = await profileRes.text()
+                throw new Error(`Profile update failed: ${text}`)
+            }
+        } catch (err) {
+            console.error('updateProfile error', err)
+            throw err
         }
-        
-        await fetch("/api/profile", {
-            method: "PUT",
-            body: JSON.stringify({profile: profile})
-        })
         
     }
 
