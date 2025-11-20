@@ -33,10 +33,22 @@ export async function signup(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const { data: signUpData, error } = await supabase.auth.signUp(data)
 
   if (error) {
     redirect('/error')
+  }
+
+  const user = signUpData.user
+  if (user) {
+    // Create profile row
+    await supabase.from("profiles").insert({
+      id: user.id,
+      username: null,
+      full_name: null,
+      website: null,
+      image_urls: [],
+    })
   }
 
   revalidatePath('/', 'layout')
