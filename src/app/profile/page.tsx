@@ -73,7 +73,7 @@ export default function Home(){
             <Box>
                 <Typography>
                     {
-                    profile ? `Hello, ${profile.full_name}` : `Hello World`
+                    profile ? `Hello, ${profile.username}` : `Hello World`
                     }
                 </Typography>
                 <br/>
