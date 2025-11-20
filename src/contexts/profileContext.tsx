@@ -7,17 +7,17 @@ import { useRouter } from "next/navigation"
 
 // data structure
 type ProfileProps = {
-    profile: Profile | undefined,
+    profile: Profile | null,
     updateProfile: (profile: Profile, images: File[]) => Promise<void>
     signOut: () => void
 }
 
 // create context
-const ProfileContext = createContext<ProfileProps | undefined>(undefined)
+const ProfileContext = createContext<ProfileProps | null>(null)
 
 // provider
 export function ProfileProvider(props: {
-    profile: Profile | undefined, children: React.ReactNode 
+    profile: Profile | null, children: React.ReactNode 
 }) {
     const router = useRouter()
 
