@@ -19,11 +19,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <ProfileProvider profile={await getProfile()}>
-        <body>
+      <body>
+        <ProfileProvider profile={await getProfile()}>
           {children}
-        </body>
-      </ProfileProvider>
+        </ProfileProvider>
+      </body>
     </html>
   );
 
@@ -50,7 +50,8 @@ export default async function RootLayout({
 
     console.log(profile)
     
-    return profile
+    return profile ? JSON.parse(JSON.stringify(profile)) : undefined;
+
   }
 }
 
